@@ -29,5 +29,6 @@ CRON
 ----
 The cron is simple, just schedule it once per day;
 here you can see us redirecting STDOUT to a log file too
+
     ## mysql backups --------------------------------------
     1 2 * * * /usr/local/bin/mxnmysqldump >> /var/log/db-backup.log
