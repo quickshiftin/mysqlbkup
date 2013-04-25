@@ -37,7 +37,7 @@ What it does
 ------------
 The script will create directories beneath `$BACKUP_DIR`, named after the database.
 Beneath there, gzip files are created for each day the database is backed up.  There
-will be at most `$MAX_BACKUPS` backups for each database.
+will be at most `$MAX_BACKUPS` backup files for each database.
 
     /var/db-backups/my_db/
     2013-02-10-my_db.sql.gz  2013-02-11-my_db.sql.gz  2013-02-12-my_db.sql.gz
