@@ -35,7 +35,7 @@ here you can see us redirecting STDOUT to a log file too
     
 What it does
 ------------
-The script will create directories beneath `$BAKUP_DIR`, named after the database.
+The script will create directories beneath `$BACKUP_DIR`, named after the database.
 Beneath there, gzip files are created for each day the database is backed up.  There
 will be at most `$MAX_BACKUPS` backups for each database.
 
