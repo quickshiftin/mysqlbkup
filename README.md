@@ -1,11 +1,10 @@
 mysqlbkup
 =========
 
-Lightweight MySQL backup script in BASH
+Lightweight MySQL backup script to backup all your MySQL databases every night.
 
-This could be the leanest MySQL backup on the entire Web!
 In less than 5 minutes backup your databases,
-with daily backups on any *nix server with mysqldump.
+with daily backups on any Linux server with mysqldump and standard GNU utilities.
 
 Instructions
 ------------
@@ -16,22 +15,27 @@ Instructions
 
 Configuration
 -------------
-**Database**
-`USER` - The database username
-`PASS` - The database password
-`HOST` - The database host (default 127.0.0.1)
+**Database Settings**
 
-**Backup**
-`BACKUP_DIR`  - The directory where backups are written
-`MAX_BACKUPS` - Number of backups per db (default 3)
+`$USER` - The database username
+
+`$PASS` - The database password
+
+`$HOST` - The database host (default 127.0.0.1)
+
+**Backup Settings**
+
+`$BACKUP_DIR`  - The directory where backups are written
+
+`$MAX_BACKUPS` - Number of backups per db (default 3)
 
 CRON
 ----
 The cron is simple, just schedule it once per day;
-here you can see us redirecting STDOUT to a log file too
+here we redirect *STDOUT* to a log file and *STDERR* to a separate log file.
 
     ## mysql backups --------------------------------------
-    1 2 * * * /usr/local/bin/mysqlbkup.sh >> /var/log/db-backup.log
+    1 2 * * * /usr/local/bin/mysqlbkup.sh 1>> /var/log/mysqlbkup.log 2>>/var/log/mysqlbkup-err.log
     
 What it does
 ------------
@@ -41,3 +45,22 @@ will be at most `$MAX_BACKUPS` backup files for each database.
 
     /var/db-backups/my_db/
     2013-02-10-my_db.sql.gz  2013-02-11-my_db.sql.gz  2013-02-12-my_db.sql.gz
+
+Retrieving a backup
+-------------------
+Just drill down into the directory of the database you desire to restore
+(or copy to another location). Take the prior example for instance. Suppose you wish to
+unpack it in your home directory and view the contents of the database. You simply copy
+and `gunzip` file file.
+```
+# Copy the database backup to your home directory
+cp /var/db-backups/my_db/2013-02-12-my_db.sql.gz ~
+# Unpack the database
+gunzip ~/2013-02-12-my_db.sql.gz
+```
+At this point *~/2013-02-12-my_db.sql* is available as a normal plain text SQL file.
+
+Requirements
+------------
+`mysql` & `mysqldump` as well as GNU versions of the following programs
+`date`, `gzip`, `head`, `hostname`, `ls`, `rm`, `sed`, `tr`, `wc`.
