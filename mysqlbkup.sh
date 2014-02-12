@@ -236,7 +236,7 @@ do
 		if [ -z $numBackups ]; then numBackups=0; fi
 
 		if [ "$numBackups" -gt "$MAX_BACKUPS" ]; then
-			numFilesToNuke=$(echo "$numBackups - $MAX_BACKUPS + 1" | bc)                                 # how many files to nuke
+			((numFilesToNuke = "$numBackups - $MAX_BACKUPS + 1"))                            # how many files to nuke)?
 			filesToNuke=$(ls -1rt "$backupDir"/*.gz | head -n $numFilesToNuke | tr '\n' ' ') # actual files to nuke
 
 			echo Nuking files $filesToNuke
