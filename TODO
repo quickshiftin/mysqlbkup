@@ -1,0 +1,4 @@
+* I'm not very confident in how the code will handle databases with spaces in them.
+* I've realized the code is almost certainly not portable to BSD systems
+* Support for an external configuration file would be nice
+* Putting the license into its own file would also be nice
