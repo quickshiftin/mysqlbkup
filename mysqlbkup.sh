@@ -210,7 +210,7 @@ if [ ! $BACKUP_DIR -d ]; then
 fi
 
 # Check for external dependencies, bail with an error message if any are missing
-for program in date sed tr head mysql mysqldump wc gzip ls rm
+for program in date gzip head hostname ls mysql mysqldump rm sed tr wc
 do
     which $program
     if [ $? -gt 0 ]; then
