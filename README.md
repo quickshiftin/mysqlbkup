@@ -10,8 +10,8 @@ Instructions
 ------------
 1. Download the script, I recommend installing it somewhere like */usr/local/bin*
 2. Set permissions & ownership accordingly
-3. Configure the script's database and various other parameters (see *Configuration* below)
-4. Setup a CRON job
+3. Configure database and backup parameters (see **[Configuration](https://github.com/quickshiftin/mysqlbkup/edit/master/README.md#configuration)** below)
+4. Setup a CRON job (see **[CRON](https://github.com/quickshiftin/mysqlbkup/edit/master/README.md#cron)** below)
 
 Configuration
 -------------
