@@ -232,12 +232,12 @@ do
 		mkdir -p $backupDir
 	else
 	# nuke any backups beyond $MAX_BACKUPS
-		numBackups=$(ls -1lt "$backupDir"/*.gz 2>/dev/null | wc -l) # count the number of existing backups for $db
+		numBackups=$(ls -1lt "$backupDir"/*.gz | wc -l) # count the number of existing backups for $db
 		if [ -z $numBackups ]; then numBackups=0; fi
 
 		if [ "$numBackups" -gt "$MAX_BACKUPS" ]; then
 			numFilesToNuke=$(echo "$numBackups - $MAX_BACKUPS + 1" | bc)                                 # how many files to nuke
-			filesToNuke=$(ls -1rt "$backupDir"/*.gz 2>/dev/null | head -n $numFilesToNuke | tr '\n' ' ') # actual files to nuke
+			filesToNuke=$(ls -1rt "$backupDir"/*.gz | head -n $numFilesToNuke | tr '\n' ' ') # actual files to nuke
 
 			echo Nuking files $filesToNuke
 			rm $filesToNuke
