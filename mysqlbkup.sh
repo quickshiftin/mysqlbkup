@@ -196,7 +196,8 @@ BACKUP_DIR=
 MAX_BACKUPS=3
 
 # validation -------------------------------------------------
-if [ -z "$USER" -o -z "$PASS" ]; then
+# @note We purposely allow blank passwords on purpose
+if [ -z "$USER" ]; then
     echo 'Username or pass not set in configuration.' 1>&2
     exit 1
 fi
@@ -218,7 +219,7 @@ fi
 # Check for external dependencies, bail with an error message if any are missing
 for program in date gzip head hostname ls mysql mysqldump rm sed tr wc
 do
-    which $program
+    which $program 1>/dev/null 2>/dev/null
     if [ $? -gt 0 ]; then
         echo "External dependency $program not found or not in $PATH" 1>&2
         exit 4
@@ -230,12 +231,12 @@ date=$(date +%F)
 
 # get the list of dbs to backup, may as well just hit them all..
 dbs=$(echo 'show databases' | mysql --host="$HOST" --user="$USER" --password="$PASS")
-dbs=$(echo "$dbs" | sed -r 's/(Database |information_schema )//g')
+dbs=$(echo $dbs | sed -r 's/(Database |information_schema |performance_schema )//g')
 
-echo "Running dump-dbs on $(hostname) - $date"
+echo "== Running $0 on $(hostname) - $date =="; echo
 
 # loop over the list of databases
-for db in "$dbs"
+for db in $dbs
 do
 	backupDir="$BACKUP_DIR/$db"    # full path to the backup dir for $db
 	backupFile="$date-$db.sql.gz"  # filename of backup for $db & $date
@@ -266,7 +267,7 @@ do
 	# create the backup for $db
 	echo "Running: mysqldump -u $USER --password=$PASS -H $HOST $db | gzip > $backupDir/$backupFile"
 	mysqldump --user="$USER" --password="$PASS" --host="$HOST" "$db" | gzip > "$backupDir/$backupFile"
-	
+	echo
 done
 
 echo "Finished running - $date"
