@@ -198,22 +198,28 @@ MAX_BACKUPS=3
 # validation -------------------------------------------------
 # @note We purposely allow blank passwords on purpose
 if [ -z "$USER" ]; then
-    echo 'Username or pass not set in configuration.' 1>&2
+    echo 'Username not set in configuration.' 1>&2
     exit 1
+fi
+
+if [ ! -d "$HOST" ]; then
+    echo "Host not set in configuration." 1>&2
+    exit 2
 fi
 
 if [ -z "$BACKUP_DIR" ]; then
     echo 'Backup directory not set in configuration.' 1>&2
-    exit 2
+    exit 3
 fi
 
 if [ -z "$MAX_BACKUPS" ]; then
     echo 'Max backups not configured.' 1>&2
+    exit 4
 fi
 
 if [ ! -d "$BACKUP_DIR" ]; then
     echo "Backup directory $BACKUP_DIR does not exist." 1>&2
-    exit 3
+    exit 5
 fi
 
 # Check for external dependencies, bail with an error message if any are missing
@@ -222,7 +228,7 @@ do
     which $program 1>/dev/null 2>/dev/null
     if [ $? -gt 0 ]; then
         echo "External dependency $program not found or not in $PATH" 1>&2
-        exit 4
+        exit 6
     fi
 done
 
@@ -260,7 +266,7 @@ do
 			filesToNuke=$(ls -1rt "$backupDir"/*.gz | head -n "$numFilesToNuke" | tr '\n' ' ')
 
 			echo "Nuking files $filesToNuke"
-			rm "$filesToNuke"
+			rm $filesToNuke
 		fi
 	fi
 
@@ -270,5 +276,4 @@ do
 	echo
 done
 
-echo "Finished running - $date"
-echo
+echo "Finished running - $date"; echo
