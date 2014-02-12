@@ -3,8 +3,8 @@ mysqlbkup
 
 Lightweight MySQL backup script to backup all your MySQL databases every night.
 
-In less than 5 minutes backup your databases,
-with daily backups on any Linux server with mysqldump and standard GNU utilities.
+In a mater of minutes you can setup nightly backups of your MySQL databases on
+any Linux server with mysqldump and standard GNU utilities.
 
 Instructions
 ------------
