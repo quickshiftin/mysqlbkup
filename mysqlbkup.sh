@@ -223,7 +223,7 @@ date=$(date +%F) # the date is used for backup file names
 
 # get the list of dbs to backup, may as well just hit them all..
 dbs=$(echo 'show databases' | mysql --host=$HOST --user=$USER --password=$PASS)
-dbs=$(echo $dbs | sed -E 's/(Database |information_schema )//g')
+dbs=$(echo $dbs | sed -r 's/(Database |information_schema )//g')
 
 echo Running dump-dbs on $(hostname) - $date
 
