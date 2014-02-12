@@ -209,6 +209,16 @@ if [ ! $BACKUP_DIR -d ]; then
     exit 3
 fi
 
+# Check for external dependencies, bail with an error message if any are missing
+for program in date sed tr head mysql mysqldump wc gzip ls rm
+do
+    which $program
+    if [ $? -gt 0 ]; then
+        echo External dependency $program not found or not in \$PATH 1>&2
+        exit 4
+    fi
+done
+
 date=$(date +%F) # the date is used for backup file names
 
 # get the list of dbs to backup, may as well just hit them all..
