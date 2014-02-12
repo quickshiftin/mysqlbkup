@@ -167,7 +167,9 @@
 #Library.
 # --------------------------------------------------------------------------------
 # mysqlbkup
-# Nathan Nobbe 2013
+# (c) Nathan Nobbe 2014
+# http://quickshiftin.com
+# quickshiftin@gmail.com
 #
 # A simple MySQL backup script in BASH.
 #
@@ -194,18 +196,22 @@ BACKUP_DIR=
 MAX_BACKUPS=3
 
 # validation -------------------------------------------------
-if [ $USER = ''] || [ $PASS = '' ]; then
-    echo Username or pass not set in configuration.
+if [ -z "$USER" -o -z "$PASS" ]; then
+    echo 'Username or pass not set in configuration.' 1>&2
     exit 1
 fi
 
-if [ $BACKUP_DIR = '' ]; then
-    echo Backup directory not set in configuration.
+if [ -z "$BACKUP_DIR" ]; then
+    echo 'Backup directory not set in configuration.' 1>&2
     exit 2
 fi
 
-if [ ! $BACKUP_DIR -d ]; then
-    echo "Backup directory $BACKUP_DIR does not exist."
+if [ -z "$MAX_BACKUPS" ]; then
+    echo 'Max backups not configured.' 1>&2
+fi
+
+if [ ! -d $BACKUP_DIR ]; then
+    echo "Backup directory $BACKUP_DIR does not exist." 1>&2
     exit 3
 fi
 
@@ -219,7 +225,8 @@ do
     fi
 done
 
-date=$(date +%F) # the date is used for backup file names
+# the date is used for backup file names
+date=$(date +%F)
 
 # get the list of dbs to backup, may as well just hit them all..
 dbs=$(echo 'show databases' | mysql --host=$HOST --user=$USER --password=$PASS)
@@ -235,19 +242,21 @@ do
 
 	echo Backing up $db into $backupDir
 
-	# each db gets its own directory
-	if [ ! -e $backupDir ]; then
-	# create the backup dir for $db if it doesn't exist
+  # each db gets its own directory
+	if [ ! -d "$backupDir" ]; then
+    # create the backup dir for $db if it doesn't exist
 		echo Creating directory $backupDir
 		mkdir -p $backupDir
 	else
-	# nuke any backups beyond $MAX_BACKUPS
+    # nuke any backups beyond $MAX_BACKUPS
 		numBackups=$(ls -1lt "$backupDir"/*.gz | wc -l) # count the number of existing backups for $db
-		if [ -z $numBackups ]; then numBackups=0; fi
+		if [ -z "$numBackups" ]; then numBackups=0; fi
 
 		if [ "$numBackups" -gt "$MAX_BACKUPS" ]; then
-			((numFilesToNuke = "$numBackups - $MAX_BACKUPS + 1"))                            # how many files to nuke)?
-			filesToNuke=$(ls -1rt "$backupDir"/*.gz | head -n $numFilesToNuke | tr '\n' ' ') # actual files to nuke
+      # how many files to nuke
+			((numFilesToNuke = "$numBackups - $MAX_BACKUPS + 1"))
+      # actual files to nuke
+			filesToNuke=$(ls -1rt "$backupDir"/*.gz | head -n $numFilesToNuke | tr '\n' ' ')
 
 			echo Nuking files $filesToNuke
 			rm $filesToNuke
@@ -255,7 +264,7 @@ do
 	fi
 
 	# create the backup for $db
-	echo "Running backup command: mysqldump -u $USER --password=$PASS -H $HOST $db | gzip > $backupDir/$backupFile"
+	echo "Running: mysqldump -u $USER --password=$PASS -H $HOST $db | gzip > $backupDir/$backupFile"
 	mysqldump --user=$USER --password=$PASS --host=$HOST $db | gzip > "$backupDir/$backupFile"
 	
 done
