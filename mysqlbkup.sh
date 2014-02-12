@@ -210,7 +210,7 @@ if [ -z "$MAX_BACKUPS" ]; then
     echo 'Max backups not configured.' 1>&2
 fi
 
-if [ ! -d $BACKUP_DIR ]; then
+if [ ! -d "$BACKUP_DIR" ]; then
     echo "Backup directory $BACKUP_DIR does not exist." 1>&2
     exit 3
 fi
@@ -220,7 +220,7 @@ for program in date gzip head hostname ls mysql mysqldump rm sed tr wc
 do
     which $program
     if [ $? -gt 0 ]; then
-        echo External dependency $program not found or not in \$PATH 1>&2
+        echo "External dependency $program not found or not in $PATH" 1>&2
         exit 4
     fi
 done
@@ -229,24 +229,24 @@ done
 date=$(date +%F)
 
 # get the list of dbs to backup, may as well just hit them all..
-dbs=$(echo 'show databases' | mysql --host=$HOST --user=$USER --password=$PASS)
+dbs=$(echo 'show databases' | mysql --host="$HOST" --user="$USER" --password="$PASS")
 dbs=$(echo $dbs | sed -r 's/(Database |information_schema )//g')
 
-echo Running dump-dbs on $(hostname) - $date
+echo "Running dump-dbs on $(hostname) - $date"
 
 # loop over the list of databases
-for db in $dbs
+for db in "$dbs"
 do
 	backupDir="$BACKUP_DIR/$db"    # full path to the backup dir for $db
 	backupFile="$date-$db.sql.gz"  # filename of backup for $db & $date
 
-	echo Backing up $db into $backupDir
+	echo "Backing up $db into $backupDir"
 
   # each db gets its own directory
 	if [ ! -d "$backupDir" ]; then
     # create the backup dir for $db if it doesn't exist
-		echo Creating directory $backupDir
-		mkdir -p $backupDir
+		echo "Creating directory $backupDir"
+		mkdir -p "$backupDir"
 	else
     # nuke any backups beyond $MAX_BACKUPS
 		numBackups=$(ls -1lt "$backupDir"/*.gz | wc -l) # count the number of existing backups for $db
@@ -256,18 +256,18 @@ do
       # how many files to nuke
 			((numFilesToNuke = "$numBackups - $MAX_BACKUPS + 1"))
       # actual files to nuke
-			filesToNuke=$(ls -1rt "$backupDir"/*.gz | head -n $numFilesToNuke | tr '\n' ' ')
+			filesToNuke=$(ls -1rt "$backupDir"/*.gz | head -n "$numFilesToNuke" | tr '\n' ' ')
 
-			echo Nuking files $filesToNuke
-			rm $filesToNuke
+			echo "Nuking files $filesToNuke"
+			rm "$filesToNuke"
 		fi
 	fi
 
 	# create the backup for $db
 	echo "Running: mysqldump -u $USER --password=$PASS -H $HOST $db | gzip > $backupDir/$backupFile"
-	mysqldump --user=$USER --password=$PASS --host=$HOST $db | gzip > "$backupDir/$backupFile"
+	mysqldump --user="$USER" --password="$PASS" --host="$HOST" "$db" | gzip > "$backupDir/$backupFile"
 	
 done
 
-echo Finished running - $date
+echo "Finished running - $date"
 echo
