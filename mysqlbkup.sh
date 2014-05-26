@@ -186,6 +186,14 @@
 # simple logging. 
 # --------------------------------------------------------------------------------
 
+platform='unknown'
+uname=`uname`
+if [[ "$uname" == 'Linux' ]]; then
+   platform='linux'
+elif [[ "$uname" == 'FreeBSD' ]]; then
+   platform='freebsd'
+fi
+
 # mysql server info ------------------------------------------
 USER=
 PASS=
@@ -237,7 +245,14 @@ date=$(date +%F)
 
 # get the list of dbs to backup, may as well just hit them all..
 dbs=$(echo 'show databases' | mysql --host="$HOST" --user="$USER" --password="$PASS")
-dbs=$(echo $dbs | sed -r 's/(Database |information_schema |performance_schema )//g')
+
+# @note Crude handling for OSX,
+#       Maybe better to test sed itself rather than infer from OS
+if [ $platform == 'linux' ]; then
+    dbs=$(echo $dbs | sed -r 's/(Database |information_schema |performance_schema )//g')
+else
+    dbs=$(echo $dbs | sed -E 's/(Database |information_schema |performance_schema )//g')
+fi
 
 echo "== Running $0 on $(hostname) - $date =="; echo
 
