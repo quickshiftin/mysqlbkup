@@ -202,7 +202,7 @@ if [ -z "$USER" ]; then
     exit 1
 fi
 
-if [ ! -d "$HOST" ]; then
+if [ -z "$HOST" ]; then
     echo "Host not set in configuration." 1>&2
     exit 2
 fi
