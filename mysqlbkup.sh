@@ -287,7 +287,7 @@ do
 
 	# create the backup for $db
 	echo "Running: mysqldump -u $USER --password=******** -H $HOST $db | gzip > $backupDir/$backupFile"
-	mysqldump --user="$USER" --password="$PASS" --host="$HOST" "$db" | gzip > "$backupDir/$backupFile"
+	mysqldump --max_allowed_packet=250M --user="$USER" --password="$PASS" --host="$HOST" "$db" | gzip > "$backupDir/$backupFile"
 	echo
 done
 
