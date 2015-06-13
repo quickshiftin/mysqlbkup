@@ -51,7 +51,7 @@ Retrieving a backup
 Just drill down into the directory of the database you desire to restore
 (or copy to another location). Take the prior example for instance. Suppose you wish to
 unpack it in your home directory and view the contents of the database. You simply copy
-and `gunzip` file file.
+and `gunzip` the file.
 ```
 # Copy the database backup to your home directory
 cp /var/db-backups/my_db/2013-02-12-my_db.sql.gz ~
