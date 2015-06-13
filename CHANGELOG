@@ -1,7 +1,14 @@
+Version 1.2
+-----------
+* Fix check for $HOST per @ryanyakich
+* Crude support for sed on OSX
+* Fix typos
+* add --max-allowed-packet option to mysqldump per @bigwilliam
+* Add --skip-lock-tables flag
+
 Version 1.1
 -----------
 * Added checks for external programs
 * Additional checks for required variables
 * Added escapes with double-quotes
 * Filter out performance_schema
-
