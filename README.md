@@ -40,27 +40,27 @@ here we redirect *STDOUT* to a log file and *STDERR* to a separate log file.
 What it does
 ------------
 The script will create directories beneath `$BACKUP_DIR`, named after the database.
-Beneath there, gzip files are created for each day the database is backed up.  There
+Beneath there, xz files are created for each day the database is backed up. There
 will be at most `$MAX_BACKUPS` backup files for each database.
 
     /var/db-backups/my_db/
-    2013-02-10-my_db.sql.gz  2013-02-11-my_db.sql.gz  2013-02-12-my_db.sql.gz
+    2013-02-10-my_db.sql.xz  2013-02-11-my_db.sql.xz  2013-02-12-my_db.sql.xz
 
 Retrieving a backup
 -------------------
 Just drill down into the directory of the database you desire to restore
 (or copy to another location). Take the prior example for instance. Suppose you wish to
 unpack it in your home directory and view the contents of the database. You simply copy
-and `gunzip` the file.
+and `unxz` the file.
 ```
 # Copy the database backup to your home directory
-cp /var/db-backups/my_db/2013-02-12-my_db.sql.gz ~
+cp /var/db-backups/my_db/2013-02-12-my_db.sql.xz ~
 # Unpack the database
-gunzip ~/2013-02-12-my_db.sql.gz
+unxz ~/2013-02-12-my_db.sql.xz
 ```
 At this point *~/2013-02-12-my_db.sql* is available as a normal plain text SQL file.
 
 Requirements
 ------------
 `mysql` & `mysqldump` as well as GNU versions of the following programs
-`date`, `gzip`, `head`, `hostname`, `ls`, `rm`, `sed`, `tr`, `wc`.
+`date`, `xz`, `head`, `hostname`, `ls`, `rm`, `sed`, `tr`, `wc`.

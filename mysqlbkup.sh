@@ -231,7 +231,7 @@ if [ ! -d "$BACKUP_DIR" ]; then
 fi
 
 # Check for external dependencies, bail with an error message if any are missing
-for program in date gzip head hostname ls mysql mysqldump rm sed tr wc
+for program in date xz head hostname ls mysql mysqldump rm sed tr wc
 do
     which $program 1>/dev/null 2>/dev/null
     if [ $? -gt 0 ]; then
@@ -260,7 +260,7 @@ echo "== Running $0 on $(hostname) - $date =="; echo
 for db in $dbs
 do
 	backupDir="$BACKUP_DIR/$db"    # full path to the backup dir for $db
-	backupFile="$date-$db.sql.gz"  # filename of backup for $db & $date
+	backupFile="$date-$db.sql.xz"  # filename of backup for $db & $date
 
 	echo "Backing up $db into $backupDir"
 
@@ -271,14 +271,14 @@ do
 		mkdir -p "$backupDir"
 	else
     # nuke any backups beyond $MAX_BACKUPS
-		numBackups=$(ls -1lt "$backupDir"/*.gz | wc -l) # count the number of existing backups for $db
+		numBackups=$(ls -1lt "$backupDir"/*.xz | wc -l) # count the number of existing backups for $db
 		if [ -z "$numBackups" ]; then numBackups=0; fi
 
 		if [ "$numBackups" -gt "$MAX_BACKUPS" ]; then
       # how many files to nuke
 			((numFilesToNuke = "$numBackups - $MAX_BACKUPS + 1"))
       # actual files to nuke
-			filesToNuke=$(ls -1rt "$backupDir"/*.gz | head -n "$numFilesToNuke" | tr '\n' ' ')
+			filesToNuke=$(ls -1rt "$backupDir"/*.xz | head -n "$numFilesToNuke" | tr '\n' ' ')
 
 			echo "Nuking files $filesToNuke"
 			rm $filesToNuke
@@ -286,8 +286,8 @@ do
 	fi
 
 	# create the backup for $db
-	echo "Running: mysqldump --routines --triggers --skip-lock-tables --max_allowed_packet=250M --user=$USER --password=******** -H $HOST $db | gzip > $backupDir/$backupFile"
-	mysqldump --routines --triggers --skip-lock-tables --max_allowed_packet=250M --user="$USER" --password="$PASS" --host="$HOST" "$db" | gzip > "$backupDir/$backupFile"
+	echo "Running: mysqldump --routines --triggers --skip-lock-tables --max_allowed_packet=250M --user=$USER --password=******** -H $HOST $db | xz -9 > $backupDir/$backupFile"
+	mysqldump --routines --triggers --skip-lock-tables --max_allowed_packet=250M --user="$USER" --password="$PASS" --host="$HOST" "$db" | xz -9 > "$backupDir/$backupFile"
 	echo
 done
 
