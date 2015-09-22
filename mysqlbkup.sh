@@ -120,8 +120,8 @@ do
 	fi
 
 	# create the backup for $db
-	echo "Running: mysqldump --routines --triggers --skip-lock-tables --max_allowed_packet=250M --user=$USER --password=******** -H $HOST $db | gzip > $backupDir/$backupFile"
-	mysqldump --routines --triggers --skip-lock-tables --max_allowed_packet=250M --user="$USER" --password="$PASS" --host="$HOST" "$db" | gzip > "$backupDir/$backupFile"
+	echo "Running: mysqldump --force --opt --routines --triggers --max_allowed_packet=250M --user=$USER --password=******** -H $HOST $db | gzip > $backupDir/$backupFile"
+	mysqldump --force --opt --routines --triggers --max_allowed_packet=250M --user="$USER" --password="$PASS" --host="$HOST" "$db" | gzip > "$backupDir/$backupFile"
 	echo
 done
 
