@@ -29,6 +29,14 @@ Configuration
 
 `$MAX_BACKUPS` - Number of backups per database (default 3)
 
+**Compression Settings**
+
+`$BKUP_BIN` - The binary used to compress mysqldump files
+`$BKUP_EXT` - The extension used for compressed backup files
+
+The default compression program is `gzip` and the default extension is _.gz_.
+You may change these to any program and extension you wish, in which case take note the various examples below will have different extensions accordingly.
+
 CRON
 ----
 The cron is simple, just schedule it once per day.
@@ -74,4 +82,4 @@ Restore a zipped SQL file:
 Requirements
 ------------
 `mysql` & `mysqldump` as well as GNU versions of the following programs
-`date`, `gzip`, `head`, `hostname`, `ls`, `rm`, `sed`, `tr`, `wc`.
+`date`, `gzip`, `head`, `hostname`, `ls`, `rm`, `sed`, `tr`, `wc`
