@@ -32,6 +32,7 @@ Configuration
 **Compression Settings**
 
 `$BKUP_BIN` - The binary used to compress mysqldump files
+
 `$BKUP_EXT` - The extension used for compressed backup files
 
 The default compression program is `gzip` and the default extension is _.gz_.
