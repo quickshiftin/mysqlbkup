@@ -129,20 +129,20 @@ do
 
 	echo "Backing up $db into $backupDir"
 
-  # each db gets its own directory
+    # each db gets its own directory
 	if [ ! -d "$backupDir" ]; then
-    # create the backup dir for $db if it doesn't exist
+        # create the backup dir for $db if it doesn't exist
 		echo "Creating directory $backupDir"
 		mkdir -p "$backupDir"
 	else
-    # nuke any backups beyond $MAX_BACKUPS
+        # nuke any backups beyond $MAX_BACKUPS
 		numBackups=$(ls -1lt "$backupDir"/*."$BKUP_EXT" | wc -l) # count the number of existing backups for $db
 		if [ -z "$numBackups" ]; then numBackups=0; fi
 
 		if [ "$numBackups" -gt "$MAX_BACKUPS" ]; then
-      # how many files to nuke
+            # how many files to nuke
 			((numFilesToNuke = "$numBackups - $MAX_BACKUPS + 1"))
-      # actual files to nuke
+            # actual files to nuke
 			filesToNuke=$(ls -1rt "$backupDir"/*."$BKUP_EXT" | head -n "$numFilesToNuke" | tr '\n' ' ')
 
 			echo "Nuking files $filesToNuke"
