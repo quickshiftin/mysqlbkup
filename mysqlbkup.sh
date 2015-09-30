@@ -73,7 +73,7 @@ if [ -n "$1" -a "$1" == 'dry' ]; then
 fi
 
 # Check for external dependencies, bail with an error message if any are missing
-for program in date $BKUP_BIN head hostname ls mysql mysqldump rm sed tr wc
+for program in date $BKUP_BIN head hostname ls mysql mysqldump rm tr wc
 do
     which $program 1>/dev/null 2>/dev/null
     if [ $? -gt 0 ]; then
@@ -87,10 +87,6 @@ date=$(date +%F)
 
 # get the list of dbs to backup, may as well just hit them all..
 dbs=$(echo 'show databases' | mysql --host="$HOST" --user="$USER" --password="$PASS")
-
-# @note Crude handling for OSX,
-#       Maybe better to test sed itself rather than infer from OS
-dbs=$(echo $dbs)
 
 # Apply default filters
 db_filter='Database information_schema performance_schema'
