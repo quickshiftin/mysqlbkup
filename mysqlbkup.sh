@@ -66,6 +66,12 @@ if [ ! -d "$BACKUP_DIR" ]; then
     exit 5
 fi
 
+# First command line arg indicates dry mode meaning don't actually run mysqldump
+DRY_MODE=0
+if [ -n "$1" -a "$1" == 'dry' ]; then
+    DRY_MODE=1
+fi
+
 # Check for external dependencies, bail with an error message if any are missing
 for program in date $BKUP_BIN head hostname ls mysql mysqldump rm sed tr wc
 do
@@ -146,6 +152,12 @@ do
 
 	# create the backup for $db
 	echo "Running: mysqldump --force --opt --routines --triggers --max_allowed_packet=250M --user=$USER --password=******** -H $HOST $db | $BKUP_BIN > $backupDir/$backupFile"
+
+    # Skip actual call to mysqldump in DRY mode
+    if [ $DRY_MODE -eq 1 ]; then
+        continue;
+    fi
+
 	mysqldump --force --opt --routines --triggers --max_allowed_packet=250M --user="$USER" --password="$PASS" --host="$HOST" "$db" | $BKUP_BIN > "$backupDir/$backupFile"
 	echo
 done
