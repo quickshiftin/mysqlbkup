@@ -35,6 +35,10 @@ Configuration
 
 `$BKUP_EXT` - The extension used for compressed backup files
 
+**Database filter Setting**
+
+`$DB_EXCLUDE_FILTER` - Filter to exclude databases from the backup (see [Excluding databases from backup](https://github.com/quickshiftin/mysqlbkup/edit/master/README.md#user-content-excluding-databases-from-backup) below)
+
 The default compression program is `gzip` and the default extension is _.gz_.
 You may change these to any program and extension you wish, in which case take note the various examples below will have different extensions accordingly.
 
@@ -79,8 +83,36 @@ Restore an unzipped SQL file:
 Restore a zipped SQL file:
 
     gunzip < [backupfile.sql.gz] | mysql -h [host] -u [uname] -p[pass] [dbname]
+    
+Excluding databases from backup
+-------------------------------
+The filter string is space-separated list of entries that indicate databases to exclude. You may do an exact match such as
+```
+DB_EXCLUDE_FILTER='my_db'
+```
+By default exclusing filter entries use [BASH pattern matching](http://www.gnu.org/software/bash/manual/bash.html#Pattern-Matching). So you might test for a prefix in the database name with a filter like this
+```
+DB_EXCLUDE_FILTER='wp_*'
+```
+If BASH pattern matching isn't good enough for some reason, you may alternatively use [POSIX regular expressions](http://www.regular-expressions.info/posix.html) by prefixing your entry with a tilde. For example
+```
+DB_EXCLUDE_FILTER='~.*_test'
+```
+Again, these are space-separated entries and you can mix and match, so to include all 3 of the examples in one filter
+```
+DB_EXCLUDE_FILTER='my_db wp_* ~.*_test'
+```
 
 Requirements
 ------------
 `mysql` & `mysqldump` as well as GNU versions of the following programs
 `date`, `gzip`, `head`, `hostname`, `ls`, `rm`, `sed`, `tr`, `wc`
+
+If you override `gzip` using the `$BKUP_BIN` option, the binary you choose must be installed and will be checked during script execution.
+
+Dry Run
+-------
+To test the script's configuration you may invoke it passing _'dry'_ as the first argument.
+```
+mysqlbkup.sh dry
+```
