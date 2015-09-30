@@ -136,7 +136,7 @@ do
 		mkdir -p "$backupDir"
 	else
         # nuke any backups beyond $MAX_BACKUPS
-		numBackups=$(ls -1lt "$backupDir"/*."$BKUP_EXT" | wc -l) # count the number of existing backups for $db
+		numBackups=$(ls -1lt "$backupDir"/*."$BKUP_EXT" 2>/dev/null | wc -l) # count the number of existing backups for $db
 		if [ -z "$numBackups" ]; then numBackups=0; fi
 
 		if [ "$numBackups" -gt "$MAX_BACKUPS" ]; then
