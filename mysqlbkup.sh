@@ -20,14 +20,6 @@
 # simple logging. 
 # --------------------------------------------------------------------------------
 
-platform='unknown'
-uname=`uname`
-if [[ "$uname" == 'Linux' ]]; then
-   platform='linux'
-elif [[ "$uname" == 'FreeBSD' ]]; then
-   platform='freebsd'
-fi
-
 # mysql server info ------------------------------------------
 USER=
 PASS=
@@ -41,7 +33,7 @@ MAX_BACKUPS=3
 # This is a space separated list.
 # Each entry supports bash pattern matching by default.
 # You may use POSIX regular expressions for a given entry by prefixing it with a tilde.
-DB_EXCLUDE_FILTER=''
+DB_EXCLUDE_FILTER=
 
 # Compression library
 BKUP_BIN=gzip # Change this to xz if you wish, for tighter compression
@@ -92,10 +84,12 @@ dbs=$(echo 'show databases' | mysql --host="$HOST" --user="$USER" --password="$P
 
 # @note Crude handling for OSX,
 #       Maybe better to test sed itself rather than infer from OS
-if [ $platform == 'linux' ]; then
-    dbs=$(echo $dbs | sed -r 's/(Database |information_schema |performance_schema )//g')
-else
-    dbs=$(echo $dbs | sed -E 's/(Database |information_schema |performance_schema )//g')
+dbs=$(echo $dbs)
+
+# Apply default filters
+db_filter='Database information_schema performance_schema'
+if [ ${#DB_EXCLUDE_FILTER} -gt 0 ]; then
+    db_filter="$db_filter ${DB_EXCLUDE_FILTER}"
 fi
 
 echo "== Running $0 on $(hostname) - $date =="; echo
@@ -105,7 +99,7 @@ for db in $dbs
 do
     # Check to see if the current database should be skipped
     skip='';
-    for filter in $DB_EXCLUDE_FILTER; do
+    for filter in $db_filter; do
         real_filter="${filter:1}"
 
         # default to bash pattern matching
