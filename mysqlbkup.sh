@@ -37,6 +37,12 @@ HOST=127.0.0.1
 BACKUP_DIR=
 MAX_BACKUPS=3
 
+# Databases to ignore
+# This is a space separated list.
+# Each entry supports bash pattern matching by default.
+# You may use POSIX regular expressions for a given entry by prefixing it with a tilde.
+DB_EXCLUDE_FILTER=''
+
 # Compression library
 BKUP_BIN=gzip # Change this to xz if you wish, for tighter compression
 BKUP_EXT=gz   # Change this to xz if you wish, for tighter compression
@@ -97,6 +103,27 @@ echo "== Running $0 on $(hostname) - $date =="; echo
 # loop over the list of databases
 for db in $dbs
 do
+    # Check to see if the current database should be skipped
+    skip='';
+    for filter in $DB_EXCLUDE_FILTER; do
+        real_filter="${filter:1}"
+
+        # default to bash pattern matching
+        # with support for regular expression matching instead
+        match_type='='
+        if [ "${filter:0:1}" == '~' ]; then
+            match_type='=~'
+        fi
+
+        cmd='if [[ "'"$db"'" '"$match_type"' '"$filter"' ]]; then echo skip; fi;';
+        skip=$(bash -c "$cmd");
+
+        # Skip this database if
+        if [ "$skip" == skip ]; then
+            continue 2;
+        fi
+    done;
+
 	backupDir="$BACKUP_DIR/$db"    # full path to the backup dir for $db
 	backupFile="$date-$db.sql.$BKUP_EXT"  # filename of backup for $db & $date
 
