@@ -106,7 +106,7 @@ DB_EXCLUDE_FILTER='my_db wp_* ~.*_test'
 Requirements
 ------------
 `mysql` & `mysqldump` as well as GNU versions of the following programs
-`date`, `gzip`, `head`, `hostname`, `ls`, `rm`, `sed`, `tr`, `wc`
+`date`, `gzip`, `head`, `hostname`, `ls`, `rm`, `tr`, `wc`
 
 If you override `gzip` using the `$BKUP_BIN` option, the binary you choose must be installed and will be checked during script execution.
 
