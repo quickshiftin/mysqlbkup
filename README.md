@@ -35,12 +35,12 @@ Configuration
 
 `$BKUP_EXT` - The extension used for compressed backup files
 
+The default compression program is `gzip` and the default extension is _.gz_.
+You may change these to any program and extension you wish, in which case take note the various examples below will have different extensions accordingly.
+
 **Database filter Setting**
 
 `$DB_EXCLUDE_FILTER` - Filter to exclude databases from the backup (see [Excluding databases from backup](https://github.com/quickshiftin/mysqlbkup/edit/master/README.md#user-content-excluding-databases-from-backup) below)
-
-The default compression program is `gzip` and the default extension is _.gz_.
-You may change these to any program and extension you wish, in which case take note the various examples below will have different extensions accordingly.
 
 CRON
 ----
