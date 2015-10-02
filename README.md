@@ -90,7 +90,7 @@ The filter string is space-separated list of entries that indicate databases to 
 ```
 DB_EXCLUDE_FILTER='my_db'
 ```
-By default exclusing filter entries use [BASH pattern matching](http://www.gnu.org/software/bash/manual/bash.html#Pattern-Matching). So you might test for a prefix in the database name with a filter like this
+By default excluding filter entries use [BASH pattern matching](http://www.gnu.org/software/bash/manual/bash.html#Pattern-Matching). So you might test for a prefix in the database name with a filter like this
 ```
 DB_EXCLUDE_FILTER='wp_*'
 ```
