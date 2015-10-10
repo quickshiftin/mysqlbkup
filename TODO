@@ -1,3 +1,8 @@
-* I'm not very confident in how the code will handle databases with spaces in them.
-* I've realized the code is almost certainly not portable to BSD systems
-* Support for an external configuration file would be nice
+Tests
+-----
+* Test the code with databases that have spaces in the names
+* Test the code on various operating systems including BSD; try to make it as portable as possible
+
+Configuration
+-------------
+* Support to configure flags passed to `mysqldump`
