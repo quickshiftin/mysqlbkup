@@ -111,6 +111,10 @@ do
             match_type='=~'
         fi
 
+        # Evalute the matching expression such that metacharacters like * are
+        # treated appropriately instead of literally
+        # @note If you know a way to do this without invoking the shell again please make this better!
+        #       This was the only way I could figure out how to do it with my skill level in BASH.
         cmd='if [[ "'"$db"'" '"$match_type"' '"$filter"' ]]; then echo skip; fi;';
         skip=$(bash -c "$cmd");
 
