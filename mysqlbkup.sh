@@ -124,42 +124,42 @@ do
         fi
     done;
 
-	backupDir="$BACKUP_DIR/$db"    # full path to the backup dir for $db
-	backupFile="$date-$db.sql.$BKUP_EXT"  # filename of backup for $db & $date
+    backupDir="$BACKUP_DIR/$db"    # full path to the backup dir for $db
+    backupFile="$date-$db.sql.$BKUP_EXT"  # filename of backup for $db & $date
 
-	echo "Backing up $db into $backupDir"
+    echo "Backing up $db into $backupDir"
 
     # each db gets its own directory
-	if [ ! -d "$backupDir" ]; then
+    if [ ! -d "$backupDir" ]; then
         # create the backup dir for $db if it doesn't exist
-		echo "Creating directory $backupDir"
-		mkdir -p "$backupDir"
-	else
+        echo "Creating directory $backupDir"
+        mkdir -p "$backupDir"
+    else
         # nuke any backups beyond $MAX_BACKUPS
-		numBackups=$(ls -1lt "$backupDir"/*."$BKUP_EXT" 2>/dev/null | wc -l) # count the number of existing backups for $db
-		if [ -z "$numBackups" ]; then numBackups=0; fi
+        numBackups=$(ls -1lt "$backupDir"/*."$BKUP_EXT" 2>/dev/null | wc -l) # count the number of existing backups for $db
+        if [ -z "$numBackups" ]; then numBackups=0; fi
 
-		if [ "$numBackups" -gt "$MAX_BACKUPS" ]; then
+        if [ "$numBackups" -gt "$MAX_BACKUPS" ]; then
             # how many files to nuke
-			((numFilesToNuke = "$numBackups - $MAX_BACKUPS + 1"))
+            ((numFilesToNuke = "$numBackups - $MAX_BACKUPS + 1"))
             # actual files to nuke
-			filesToNuke=$(ls -1rt "$backupDir"/*."$BKUP_EXT" | head -n "$numFilesToNuke" | tr '\n' ' ')
+            filesToNuke=$(ls -1rt "$backupDir"/*."$BKUP_EXT" | head -n "$numFilesToNuke" | tr '\n' ' ')
 
-			echo "Nuking files $filesToNuke"
-			rm $filesToNuke
-		fi
-	fi
+            echo "Nuking files $filesToNuke"
+            rm $filesToNuke
+        fi
+    fi
 
-	# create the backup for $db
-	echo "Running: mysqldump --force --opt --routines --triggers --max_allowed_packet=250M --user=$USER --password=******** -H $HOST $db | $BKUP_BIN > $backupDir/$backupFile"
+    # create the backup for $db
+    echo "Running: mysqldump --force --opt --routines --triggers --max_allowed_packet=250M --user=$USER --password=******** -H $HOST $db | $BKUP_BIN > $backupDir/$backupFile"
 
     # Skip actual call to mysqldump in DRY mode
     if [ $DRY_MODE -eq 1 ]; then
         continue;
     fi
 
-	mysqldump --force --opt --routines --triggers --max_allowed_packet=250M --user="$USER" --password="$PASS" --host="$HOST" "$db" | $BKUP_BIN > "$backupDir/$backupFile"
-	echo
+    mysqldump --force --opt --routines --triggers --max_allowed_packet=250M --user="$USER" --password="$PASS" --host="$HOST" "$db" | $BKUP_BIN > "$backupDir/$backupFile"
+    echo
 done
 
 echo "Finished running - $date"; echo
