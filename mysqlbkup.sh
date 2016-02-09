@@ -21,8 +21,8 @@
 # --------------------------------------------------------------------------------
 
 # mysql server info ------------------------------------------
-if [ -e /etc/mysqlbkup ]; then
-    . /etc/mysqlbkup
+if [ -e /etc/mysqlbkup.config ]; then
+    . /etc/mysqlbkup.config
 fi
 
 if [ -z "$DEFAULTS_FILE" ]; then
@@ -85,7 +85,7 @@ done
 date=$(date +%F)
 
 # get the list of dbs to backup, may as well just hit them all..
-dbs=$(echo 'show databases' | mysql )
+dbs=$(echo 'show databases' | mysql --defaults-file=$DEFAULTS_FILE )
 
 # Apply default filters
 db_filter='Database information_schema performance_schema'
@@ -150,14 +150,14 @@ do
     fi
 
     # create the backup for $db
-    echo "Running: mysqldump --force --opt --routines --triggers --max_allowed_packet=250M $db | $BKUP_BIN > $backupDir/$backupFile"
+    echo "Running: mysqldump --defaults-file=$DEFAULTS_FILE $db | $BKUP_BIN > $backupDir/$backupFile"
 
     # Skip actual call to mysqldump in DRY mode
     if [ $DRY_MODE -eq 1 ]; then
         continue;
     fi
 
-    mysqldump --force --opt --routines --triggers --max_allowed_packet=250M "$db" | $BKUP_BIN > "$backupDir/$backupFile"
+    mysqldump --defaults-file=$DEFAULTS_FILE "$db" | $BKUP_BIN > "$backupDir/$backupFile"
     echo
 done
 
