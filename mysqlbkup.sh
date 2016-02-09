@@ -21,34 +21,13 @@
 # --------------------------------------------------------------------------------
 
 # mysql server info ------------------------------------------
-USER=
-PASS=
-HOST=127.0.0.1
-
-# additional config ------------------------------------------
-BACKUP_DIR=
-MAX_BACKUPS=3
-
-# Databases to ignore
-# This is a space separated list.
-# Each entry supports bash pattern matching by default.
-# You may use POSIX regular expressions for a given entry by prefixing it with a tilde.
-DB_EXCLUDE_FILTER=
-
-# Compression library
-BKUP_BIN=gzip # Change this to xz if you wish, for tighter compression
-BKUP_EXT=gz   # Change this to xz if you wish, for tighter compression
-
-# validation -------------------------------------------------
-# @note We purposely allow blank passwords on purpose
-if [ -z "$USER" ]; then
-    echo 'Username not set in configuration.' 1>&2
-    exit 1
+if [ -e /etc/mysqlbkup ]; then
+    . /etc/mysqlbkup
 fi
 
-if [ -z "$HOST" ]; then
-    echo "Host not set in configuration." 1>&2
-    exit 2
+if [ -z "$DEFAULTS_FILE" ]; then
+    echo 'mysql configuration file (DEFAULTS_FILE) not set in configuration.' 1>&2
+    exit 1
 fi
 
 if [ -z "$BACKUP_DIR" ]; then
@@ -64,6 +43,26 @@ fi
 if [ ! -d "$BACKUP_DIR" ]; then
     echo "Backup directory $BACKUP_DIR does not exist." 1>&2
     exit 5
+fi
+
+if [ ! -e $DEFAULTS_FILE ]; then
+    echo "DEFAULTS_FILE ($DEFAULTS_FILE) does not exist" 1>&2
+    exit 6
+fi
+
+if ! grep -Fxq "[mysql]" $DEFAULTS_FILE; then
+    echo "DEFAULTS_FILE ($DEFAULTS_FILE) missing [mysql] block" 1>&2
+    exit 7
+fi
+
+if ! grep -Fxq "[mysqldump]" $DEFAULTS_FILE; then
+    echo "DEFAULTS_FILE ($DEFAULTS_FILE) missing [mysqldump] block" 1>&2
+    exit 8
+fi
+
+if ! (stat -c "%a" $DEFAULTS_FILE | grep -xq ".00"); then
+    echo "DEFAULTS_FILE ($DEFAULTS_FILE) needs secure file permissions" 1>&2
+    exit 9
 fi
 
 # First command line arg indicates dry mode meaning don't actually run mysqldump
@@ -86,7 +85,7 @@ done
 date=$(date +%F)
 
 # get the list of dbs to backup, may as well just hit them all..
-dbs=$(echo 'show databases' | mysql --host="$HOST" --user="$USER" --password="$PASS")
+dbs=$(echo 'show databases' | mysql )
 
 # Apply default filters
 db_filter='Database information_schema performance_schema'
@@ -151,14 +150,14 @@ do
     fi
 
     # create the backup for $db
-    echo "Running: mysqldump --force --opt --routines --triggers --max_allowed_packet=250M --user=$USER --password=******** -H $HOST $db | $BKUP_BIN > $backupDir/$backupFile"
+    echo "Running: mysqldump --force --opt --routines --triggers --max_allowed_packet=250M $db | $BKUP_BIN > $backupDir/$backupFile"
 
     # Skip actual call to mysqldump in DRY mode
     if [ $DRY_MODE -eq 1 ]; then
         continue;
     fi
 
-    mysqldump --force --opt --routines --triggers --max_allowed_packet=250M --user="$USER" --password="$PASS" --host="$HOST" "$db" | $BKUP_BIN > "$backupDir/$backupFile"
+    mysqldump --force --opt --routines --triggers --max_allowed_packet=250M "$db" | $BKUP_BIN > "$backupDir/$backupFile"
     echo
 done
 
