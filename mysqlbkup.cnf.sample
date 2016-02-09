@@ -1,0 +1,9 @@
+[mysql]
+host=dbhost
+user=dba
+password=dba_passwd
+
+[mysqldump]
+host=dbhost
+user=dba
+password=dba_passwd
