@@ -1,0 +1,32 @@
+#!/bin/bash
+# --------------------------------------------------------------------------------
+# mysqlbkup
+# (c) Nathan Nobbe 2014
+# http://quickshiftin.com
+# quickshiftin@gmail.com
+#
+# Installation script for mysqlbkup utility.
+# --------------------------------------------------------------------------------
+
+# Deploy the executable
+cp mysqlbkup.sh /usr/local/bin
+chmod 755 /usr/local/bin/mysqlbkup.sh
+
+# Deploy the configuration files
+cp mysqlbkup.config.sample /etc/mysqlbkup.config
+chmod 600 /etc/mysqlbkup.config
+cp mysqlbkup.cnf.sample /etc/mysqlbkup.cnf
+chmod 600 /etc/mysqlbkup.cnf
+
+# Create the backup directory
+. /etc/mysqlbkup.config
+mkdir "$BACKUP_DIR"
+chmod 600 "$BACKUP_DIR"
+
+# Inform the user about important manual steps
+echo "mysqlbkup is installed"
+echo "Make sure to edit /etc/mysqlbkup.cnf and /etc/mysqlbkup.config for your needs"
+
+echo "Lastly, configure a crontab to execute the backup script periodically"
+echo "For example, to schedule the script to run once daily"
+echo "1 2 * * * /usr/local/bin/mysqlbkup.sh 1>> /var/log/mysqlbkup.log 2>>/var/log/mysqlbkup-err.log"

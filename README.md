@@ -8,8 +8,8 @@ any Linux server with mysqldump and standard GNU utilities.
 
 Instructions
 ------------
-1. Download the script, I recommend installing it somewhere like `/usr/local/bin`
-2. Set permissions & ownership accordingly
+1. Download the package
+2. Run the installer via sudo - `sudo ./install`
 3. Configure database and backup parameters (see **[Configuration](https://github.com/quickshiftin/mysqlbkup/edit/master/README.md#configuration)** below)
 4. Setup a CRON job (see **[CRON](https://github.com/quickshiftin/mysqlbkup/edit/master/README.md#cron)** below)
 
@@ -17,19 +17,21 @@ Configuration
 -------------
 **Database Settings**
 
-`$USER` - The database username
+These are configured in /etc/mysqlbkup.cnf. Editing this file is similar to /etc/my.cnf.
 
-`$PASS` - The database password
-
-`$HOST` - The database host (default 127.0.0.1)
+There are sensible defaults for mysqldump parameters, but you may adjust them to your needs.
 
 **Backup Settings**
+
+These are configured in /etc/mysqlbkup.config
 
 `$BACKUP_DIR`  - The directory where backups are written
 
 `$MAX_BACKUPS` - Number of backups per database (default 3)
 
 **Compression Settings**
+
+These are configured in /etc/mysqlbkup.config
 
 `$BKUP_BIN` - The binary used to compress mysqldump files
 
@@ -39,6 +41,8 @@ The default compression program is `gzip` and the default extension is _.gz_.
 You may change these to any program and extension you wish, in which case take note the various examples below will have different extensions accordingly.
 
 **Database filter Setting**
+
+These are configured in /etc/mysqlbkup.config
 
 `$DB_EXCLUDE_FILTER` - Filter to exclude databases from the backup (see [Excluding databases from backup](https://github.com/quickshiftin/mysqlbkup/edit/master/README.md#user-content-excluding-databases-from-backup) below)
 
