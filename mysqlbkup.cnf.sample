@@ -1,0 +1,14 @@
+[mysql]
+host=dbhost
+user=dba
+password=dba_passwd
+
+[mysqldump]
+host=dbhost
+user=dba
+password=dba_passwd
+force
+opt
+routines
+triggers
+max_allowed_packet=250M 
