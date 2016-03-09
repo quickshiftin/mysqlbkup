@@ -88,7 +88,7 @@ date=$(date +%F)
 dbs=$(echo 'show databases' | mysql --defaults-file=$DEFAULTS_FILE )
 
 # Apply default filters
-db_filter='Database information_schema performance_schema'
+db_filter='Database information_schema performance_schema mysql'
 if [ ${#DB_EXCLUDE_FILTER} -gt 0 ]; then
     db_filter="$db_filter ${DB_EXCLUDE_FILTER}"
 fi
