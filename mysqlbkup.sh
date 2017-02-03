@@ -11,13 +11,15 @@
 # file.  Every database has its own direcotry beneath the root
 # backup directory, $BACKUP_DIR.
 #
-# We're using gzip compression on each backup file and
+# We're using gzip compression by default on each backup file and
 # labeling backup files by date.  The number of backup files
 # per db is controlled by $MAX_BACKUPS.
 #
 # The script is intended to be run by a cron job.  It echos
-# messages to STDOUT which can be redirected to a file for
+# messages to STDOUT which can be redirecte to a file for
 # simple logging. 
+#
+# Some configuration options are supported. Read about them in the README.md file
 # --------------------------------------------------------------------------------
 
 # mysql server info ------------------------------------------
@@ -138,7 +140,7 @@ do
         numBackups=$(ls -1lt "$backupDir"/*."$BKUP_EXT" 2>/dev/null | wc -l) # count the number of existing backups for $db
         if [ -z "$numBackups" ]; then numBackups=0; fi
 
-        if [ "$numBackups" -gt "$MAX_BACKUPS" ]; then
+        if [ "$numBackups" -ge "$MAX_BACKUPS" ]; then
             # how many files to nuke
             ((numFilesToNuke = "$numBackups - $MAX_BACKUPS + 1"))
             # actual files to nuke
