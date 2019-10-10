@@ -85,6 +85,9 @@ done
 
 # the date is used for backup file names
 date=$(date +%F)
+if [ ! -z $DATE_FORMAT ]; then
+    date=$(date "$DATE_FORMAT")
+fi
 
 # get the list of dbs to backup, may as well just hit them all..
 dbs=$(echo 'show databases' | mysql --defaults-file=$DEFAULTS_FILE )
