@@ -9,6 +9,8 @@ BACKUP_DIR=/var/mysqlbkup
 
 MAX_BACKUPS=3
 
+DATE_FORMAT=
+
 # Databases to ignore
 # This is a space separated list.
 # Each entry supports bash pattern matching by default.
