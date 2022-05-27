@@ -23,8 +23,8 @@
 # --------------------------------------------------------------------------------
 
 # mysql server info ------------------------------------------
-if [ -e /etc/mysqlbkup.config ]; then
-    . /etc/mysqlbkup.config
+if [ -e /etc/mysqlbkup/mysqlbkup.config ]; then
+    . /etc/mysqlbkup/mysqlbkup.config
 fi
 
 if [ -z "$DEFAULTS_FILE" ]; then
