@@ -1,12 +1,14 @@
 [mysql]
 host=dbhost
+port=3306
 user=dba
-password=dba_passwd
+password="dba_passwd"
 
 [mysqldump]
 host=dbhost
+port=3306
 user=dba
-password=dba_passwd
+password="dba_passwd"
 force
 opt
 routines
