@@ -136,7 +136,7 @@ to
 ```
 This change allows using a symbolic link to a directory when using the NFS file system.
 
-`NFS_DIRECTORY` is your dircotry e.g. `/nfs/config/etc/mysqlbkup`
+`NFS_DIRECTORY` is your directory e.g. `/nfs/config/etc/mysqlbkup`
 ```
 ln -s /NFS_DIRECTORY/mysqlbkup /etc/mysqlbkup
 sudo chown -Rf root:root /NFS_DIRECTORY/mysqlbkup/
