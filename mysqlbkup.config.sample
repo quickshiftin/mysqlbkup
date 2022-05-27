@@ -3,7 +3,7 @@
 # https://github.com/quickshiftin/mysqlbkup
 ##########
 
-DEFAULTS_FILE=/etc/mysqlbkup.cnf
+DEFAULTS_FILE=/etc/mysqlbkup/mysqlbkup.cnf
 
 BACKUP_DIR=/var/mysqlbkup
 
