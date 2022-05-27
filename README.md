@@ -17,13 +17,13 @@ Configuration
 -------------
 **Database Settings**
 
-These are configured in /etc/mysqlbkup.cnf. Editing this file is similar to /etc/my.cnf.
+These are configured in /etc/mysqlbkup/mysqlbkup.cnf. Editing this file is similar to /etc/my.cnf.
 
 There are sensible defaults for mysqldump parameters, but you may adjust them to your needs.
 
 **Backup Settings**
 
-These are configured in /etc/mysqlbkup.config
+These are configured in /etc/mysqlbkup/mysqlbkup.config
 
 `$BACKUP_DIR`  - The directory where backups are written
 
@@ -31,7 +31,7 @@ These are configured in /etc/mysqlbkup.config
 
 **Compression Settings**
 
-These are configured in /etc/mysqlbkup.config
+These are configured in /etc/mysqlbkup/mysqlbkup.config
 
 `$BKUP_BIN` - The binary used to compress mysqldump files
 
@@ -42,7 +42,7 @@ You may change these to any program and extension you wish, in which case take n
 
 **Database filter Setting**
 
-These are configured in /etc/mysqlbkup.config
+These are configured in /etc/mysqlbkup/mysqlbkup.config
 
 `$DB_EXCLUDE_FILTER` - Filter to exclude databases from the backup (see [Excluding databases from backup](https://github.com/quickshiftin/mysqlbkup/edit/master/README.md#user-content-excluding-databases-from-backup) below)
 
@@ -119,4 +119,27 @@ Dry Run
 To test the script's configuration you may invoke it passing _'dry'_ as the first argument.
 ```
 mysqlbkup.sh dry
+```
+
+
+Note: Working with Elastic File System / NFS 
+---------------------------------------------
+We moved all config files from:
+```
+/etc/mysqlbkup.cnf
+/etc/mysqlbkup.config
+```
+to
+```
+/etc/mysqlbkup/mysqlbkup.cnf
+/etc/mysqlbkup/mysqlbkup.config
+```
+This change allows using a symbolic link to a directory when using the NFS file system.
+
+`NFS_DIRECTORY` is your dircotry e.g. `/nfs/config/etc/mysqlbkup`
+```
+ln -s /NFS_DIRECTORY/mysqlbkup /etc/mysqlbkup
+sudo chown -Rf root:root /NFS_DIRECTORY/mysqlbkup/
+sudo chmod 600 /NFS_DIRECTORY/mysqlbkup/mysqlbkup.cnf
+sudo chmod 600 /NFS_DIRECTORY/mysqlbkup/mysqlbkup.config
 ```
