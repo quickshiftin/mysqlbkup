@@ -7,9 +7,10 @@ DEFAULTS_FILE=/etc/mysqlbkup.cnf
 
 BACKUP_DIR=/var/mysqlbkup
 
-MAX_BACKUPS=3
+MAX_BACKUPS=14
 
-DATE_FORMAT=
+# SET File Format date to: 2022-05-27.11.29.46.UTC
+DATE_FORMAT="+%F.%H.%M.%S.%Z"
 
 # Databases to ignore
 # This is a space separated list.
