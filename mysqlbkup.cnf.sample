@@ -14,3 +14,9 @@ opt
 routines
 triggers
 max_allowed_packet=250M 
+
+# Set gtid from AUTO to OFF
+set-gtid-purged=OFF
+
+# Set Column Statistics to 0
+column-statistics=0
