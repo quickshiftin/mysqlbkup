@@ -1,3 +1,23 @@
+Version 1.3
+-----------
+This version Focus on: NFS releated changes when working with AWS/GCP or any other cloud based servers.
+
+[X] mysqlbkup.cnf.sample:
+    * Password Need to add double-quotes around the password.: password="mysecretpw" 
+       Without double quotes, it wouldn't be possible to read special chars in passwords.
+    * Adding port 
+    * Set gtid from AUTO to OFF
+    * Set Column Statistics to 0
+[X] mysqlbkup.cnf.sample:
+    * changing DEFAULTS_FILE=/etc/mysqlbkup/mysqlbkup.cnf
+    * Adding timestemp with timezone to make sure we know when back done
+[X] mysqlbkup.sh:
+    * changing DEFAULTS_FILE=/etc/mysqlbkup/mysqlbkup.cnf
+[X] install
+    * changing /etc/mysqlbkup/*
+[X] README.md / CHANGELOG
+    * update
+
 Version 1.2
 -----------
 * Fix check for $HOST per @ryanyakich
